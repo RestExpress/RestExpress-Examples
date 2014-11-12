@@ -1,0 +1,20 @@
+====================================================================================================
+BLOGGING EXAMPLE APPLICATION
+----------------------------------------------------------------------------------------------------
+This application supports the concept of a blog, blog entry, and blog entry comment, in hierarchical
+fashion.  Which is roughly the concepts that a blogging system like WordPress supports.  One could
+use these RESTful services to create a blogging system.
+
+This is a fully functional RestExpress application that utilizes the sub-projects, Syntaxe and
+RepoExpress for domain validation and object persistence, respectively.  It also utilizes the 
+MongoDB ObjectId as the ID for the persisted objects, which illustrates how to install your own
+object ID converters for persistence and XML and JSON marshaling.
+
+Additionally, the project illustrates how to map exceptions that are non-runtime exceptions
+(checked exceptions) into ServiceExceptions that RestExpress knows how to translate into an HTTP
+response.
+
+To run it, install and start MongoDB, then type 'mvn clean package exec:java'.
+
+The URL '/console/routes' will show you the routes available in the application
+(e.g. curl -i localhost:8081/console/routes.xml).  Or simply look in the Routes.java file.
