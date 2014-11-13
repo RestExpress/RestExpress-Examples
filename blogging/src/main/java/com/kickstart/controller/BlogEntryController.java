@@ -3,23 +3,21 @@ package com.kickstart.controller;
 import java.util.List;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
+import org.restexpress.Request;
+import org.restexpress.Response;
+import org.restexpress.common.query.QueryFilter;
+import org.restexpress.common.query.QueryOrder;
+import org.restexpress.common.query.QueryRange;
+import org.restexpress.exception.BadRequestException;
+import org.restexpress.query.QueryFilters;
+import org.restexpress.query.QueryOrders;
+import org.restexpress.query.QueryRanges;
 
 import com.kickstart.Constants;
 import com.kickstart.domain.BlogEntry;
 import com.kickstart.persistence.BlogEntryRepository;
 import com.strategicgains.hyperexpress.RelTypes;
 import com.strategicgains.hyperexpress.domain.Link;
-import com.strategicgains.hyperexpress.domain.LinkableCollection;
-import com.strategicgains.hyperexpress.util.LinkUtils;
-import com.strategicgains.restexpress.Request;
-import com.strategicgains.restexpress.Response;
-import com.strategicgains.restexpress.common.query.QueryFilter;
-import com.strategicgains.restexpress.common.query.QueryOrder;
-import com.strategicgains.restexpress.common.query.QueryRange;
-import com.strategicgains.restexpress.exception.BadRequestException;
-import com.strategicgains.restexpress.query.QueryFilters;
-import com.strategicgains.restexpress.query.QueryOrders;
-import com.strategicgains.restexpress.query.QueryRanges;
 import com.strategicgains.syntaxe.ValidationEngine;
 
 public class BlogEntryController
@@ -32,10 +30,10 @@ public class BlogEntryController
 		this.blogEntries = blogEntryRepository;
 	}
 
-	public String create(Request request, Response response)
+	public BlogEntry create(Request request, Response response)
 	{
 		BlogEntry blogEntry = request.getBodyAs(BlogEntry.class, "BlogEntry details not provided");
-		String blogId = request.getUrlDecodedHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID provided");
+		String blogId = request.getHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID provided");
 		blogEntry.setBlogId(blogId);
 		ValidationEngine.validateAndThrow(blogEntry);
 		BlogEntry saved = blogEntries.create(blogEntry);
@@ -49,13 +47,13 @@ public class BlogEntryController
 				Constants.BLOG_ENTRY_ID_PARAMETER, saved.getId(),
 				Constants.BLOG_ID_PARAMETER, blogId));
 
-		// Return the newly-created ID...
-		return saved.getId();
+		// Return the newly-created item...
+		return saved;
 	}
 
 	public BlogEntry read(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.BLOG_ENTRY_ID_PARAMETER, "No BlogEntry ID supplied");
+		String id = request.getHeader(Constants.BLOG_ENTRY_ID_PARAMETER, "No BlogEntry ID supplied");
 		BlogEntry result = blogEntries.read(id);
 
 		// Add 'self' link
@@ -80,9 +78,9 @@ public class BlogEntryController
 		return result;
 	}
 
-	public LinkableCollection<BlogEntry> readAll(Request request, Response response)
+	public List<BlogEntry> readAll(Request request, Response response)
 	{
-		String blogId = request.getUrlDecodedHeader(Constants.BLOG_ID_PARAMETER, "Blog ID not provided");
+		String blogId = request.getHeader(Constants.BLOG_ID_PARAMETER, "Blog ID not provided");
 		QueryFilter filter = QueryFilters.parseFrom(request);
 		QueryOrder order = QueryOrders.parseFrom(request);
 		QueryRange range = QueryRanges.parseFrom(request, 20);
@@ -118,7 +116,7 @@ public class BlogEntryController
 
 	public void update(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.BLOG_ENTRY_ID_PARAMETER);
+		String id = request.getHeader(Constants.BLOG_ENTRY_ID_PARAMETER);
 		BlogEntry blogEntry = request.getBodyAs(BlogEntry.class, "BlogEntry details not provided");
 		
 		if (!id.equals(blogEntry.getId()))
@@ -133,7 +131,7 @@ public class BlogEntryController
 
 	public void delete(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.BLOG_ENTRY_ID_PARAMETER, "No BlogEntry ID supplied");
+		String id = request.getHeader(Constants.BLOG_ENTRY_ID_PARAMETER, "No BlogEntry ID supplied");
 		blogEntries.delete(id);
 		response.setResponseNoContent();
 	}

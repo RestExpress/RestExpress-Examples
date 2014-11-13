@@ -17,7 +17,8 @@ extends AbstractDelayingController
 		long delayms = delay(request);
 		int status = Integer.valueOf(request.getHeader(STATUS_RESPONSE_HEADER));
 		response.setResponseCode(status);
-		return new DelayResponse("create", delayms);
+		String message = request.getHeader("echo");
+		return new DelayResponse("create", delayms, message);
 	}
 
 	public Object read(Request request, Response response)
@@ -25,7 +26,8 @@ extends AbstractDelayingController
 		long delayms = delay(request);
 		int status = Integer.valueOf(request.getHeader(STATUS_RESPONSE_HEADER));
 		response.setResponseCode(status);
-		return new DelayResponse("read", delayms);
+		String message = request.getHeader("echo");
+		return new DelayResponse("read", delayms, message);
 	}
 
 	public Object update(Request request, Response response)
@@ -33,7 +35,8 @@ extends AbstractDelayingController
 		long delayms = delay(request);
 		int status = Integer.valueOf(request.getHeader(STATUS_RESPONSE_HEADER));
 		response.setResponseCode(status);
-		return new DelayResponse("update", delayms);
+		String message = request.getHeader("echo");
+		return new DelayResponse("update", delayms, message);
 	}
 
 	public Object delete(Request request, Response response)
@@ -41,6 +44,7 @@ extends AbstractDelayingController
 		long delayms = delay(request);
 		int status = Integer.valueOf(request.getHeader(STATUS_RESPONSE_HEADER));
 		response.setResponseCode(status);
-		return new DelayResponse("delete", delayms);
+		String message = request.getHeader("echo");
+		return new DelayResponse("delete", delayms, message);
 	}
 }

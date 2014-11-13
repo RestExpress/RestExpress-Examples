@@ -4,6 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
+import org.restexpress.Format;
+import org.restexpress.Parameters;
+import org.restexpress.RestExpress;
+import org.restexpress.exception.BadRequestException;
+import org.restexpress.exception.ConflictException;
+import org.restexpress.exception.NotFoundException;
+import org.restexpress.pipeline.SimpleConsoleLogMessageObserver;
+import org.restexpress.util.Environment;
 
 import com.kickstart.event.BlogCascadeDeleteHandler;
 import com.kickstart.event.BlogEntryCascadeDeleteHandler;
@@ -15,16 +23,6 @@ import com.strategicgains.eventing.local.LocalEventBusBuilder;
 import com.strategicgains.repoexpress.exception.DuplicateItemException;
 import com.strategicgains.repoexpress.exception.InvalidObjectIdException;
 import com.strategicgains.repoexpress.exception.ItemNotFoundException;
-import com.strategicgains.restexpress.Format;
-import com.strategicgains.restexpress.Parameters;
-import com.strategicgains.restexpress.RestExpress;
-import com.strategicgains.restexpress.exception.BadRequestException;
-import com.strategicgains.restexpress.exception.ConflictException;
-import com.strategicgains.restexpress.exception.NotFoundException;
-import com.strategicgains.restexpress.pipeline.SimpleConsoleLogMessageObserver;
-import com.strategicgains.restexpress.plugin.cache.CacheControlPlugin;
-import com.strategicgains.restexpress.plugin.route.RoutesMetadataPlugin;
-import com.strategicgains.restexpress.util.Environment;
 import com.strategicgains.syntaxe.ValidationException;
 
 public class Main
@@ -35,12 +33,7 @@ public class Main
 		RestExpress server = new RestExpress()
 		    .setName("Sample Blogging")
 		    .setBaseUrl(config.getBaseUrl())
-		    .setDefaultFormat(config.getDefaultFormat())
 		    .setExecutorThreadCount(config.getExecutorThreadPoolSize())
-		    .putResponseProcessor(Format.JSON, ResponseProcessors.json())
-		    .putResponseProcessor(Format.XML, ResponseProcessors.xml())
-		    .putResponseProcessor(Format.WRAPPED_JSON, ResponseProcessors.wrappedJson())
-		    .putResponseProcessor(Format.WRAPPED_XML, ResponseProcessors.wrappedXml())
 		    .addPostprocessor(new LastModifiedHeaderPostprocessor())
 		    .addMessageObserver(new SimpleConsoleLogMessageObserver());
 

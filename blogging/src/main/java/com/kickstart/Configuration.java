@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.restexpress.Format;
+import org.restexpress.RestExpress;
+import org.restexpress.common.exception.ConfigurationException;
+import org.restexpress.util.Environment;
+
 import com.kickstart.controller.BlogController;
 import com.kickstart.controller.BlogEntryController;
 import com.kickstart.controller.CommentController;
@@ -15,10 +20,6 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
-import com.strategicgains.restexpress.Format;
-import com.strategicgains.restexpress.RestExpress;
-import com.strategicgains.restexpress.exception.ConfigurationException;
-import com.strategicgains.restexpress.util.Environment;
 
 public class Configuration
 extends Environment

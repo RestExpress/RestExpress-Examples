@@ -3,22 +3,21 @@ package com.kickstart.controller;
 import java.util.List;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
+import org.restexpress.Request;
+import org.restexpress.Response;
+import org.restexpress.common.query.QueryFilter;
+import org.restexpress.common.query.QueryOrder;
+import org.restexpress.common.query.QueryRange;
+import org.restexpress.exception.BadRequestException;
+import org.restexpress.query.QueryFilters;
+import org.restexpress.query.QueryOrders;
+import org.restexpress.query.QueryRanges;
 
 import com.kickstart.Constants;
 import com.kickstart.domain.Blog;
 import com.kickstart.persistence.BlogRepository;
 import com.strategicgains.hyperexpress.RelTypes;
 import com.strategicgains.hyperexpress.domain.Link;
-import com.strategicgains.hyperexpress.util.LinkUtils;
-import com.strategicgains.restexpress.Request;
-import com.strategicgains.restexpress.Response;
-import com.strategicgains.restexpress.common.query.QueryFilter;
-import com.strategicgains.restexpress.common.query.QueryOrder;
-import com.strategicgains.restexpress.common.query.QueryRange;
-import com.strategicgains.restexpress.exception.BadRequestException;
-import com.strategicgains.restexpress.query.QueryFilters;
-import com.strategicgains.restexpress.query.QueryOrders;
-import com.strategicgains.restexpress.query.QueryRanges;
 import com.strategicgains.syntaxe.ValidationEngine;
 
 public class BlogController
@@ -31,7 +30,7 @@ public class BlogController
 		this.blogs = blogRepository;
 	}
 
-	public String create(Request request, Response response)
+	public Blog create(Request request, Response response)
 	{
 		Blog blog = request.getBodyAs(Blog.class, "Blog details not provided");
 		ValidationEngine.validateAndThrow(blog);
@@ -44,13 +43,13 @@ public class BlogController
 		String locationUrl = request.getNamedUrl(HttpMethod.GET, Constants.BLOG_READ_ROUTE);
 		response.addLocationHeader(LinkUtils.formatUrl(locationUrl, Constants.BLOG_ID_PARAMETER, saved.getId()));
 
-		// Return the newly-created ID...
-		return saved.getId();
+		// Return the newly-created item...
+		return saved;
 	}
 
 	public Blog read(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID supplied");
+		String id = request.getHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID supplied");
 		Blog result = blogs.read(id);
 
 		// Add 'self' link
@@ -92,7 +91,7 @@ public class BlogController
 
 	public void update(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.BLOG_ID_PARAMETER);
+		String id = request.getHeader(Constants.BLOG_ID_PARAMETER);
 		Blog blog = request.getBodyAs(Blog.class, "Blog details not provided");
 		
 		if (!id.equals(blog.getId()))
@@ -107,7 +106,7 @@ public class BlogController
 
 	public void delete(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID supplied");
+		String id = request.getHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID supplied");
 		blogs.delete(id);
 		response.setResponseNoContent();
 	}

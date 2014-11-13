@@ -22,26 +22,9 @@
 			<artifactId>RestExpress</artifactId>
 			<version>0.10.5-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<type>jar</type>
-			<scope>test</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.2.5</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
-		<defaultGoal>package</defaultGoal>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -58,7 +41,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
-					<mainClass>org.restexpress.scaffold.minimal.Main</mainClass>
+					<mainClass>com.echo.Main</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -71,7 +54,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>./lib/</classpathPrefix>
-							<mainClass>org.restexpress.scaffold.minimal.Main</mainClass>
+							<mainClass>com.echo.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -3,23 +3,21 @@ package com.kickstart.controller;
 import java.util.List;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
+import org.restexpress.Request;
+import org.restexpress.Response;
+import org.restexpress.common.query.QueryFilter;
+import org.restexpress.common.query.QueryOrder;
+import org.restexpress.common.query.QueryRange;
+import org.restexpress.exception.BadRequestException;
+import org.restexpress.query.QueryFilters;
+import org.restexpress.query.QueryOrders;
+import org.restexpress.query.QueryRanges;
 
 import com.kickstart.Constants;
 import com.kickstart.domain.Comment;
 import com.kickstart.persistence.CommentRepository;
 import com.strategicgains.hyperexpress.RelTypes;
 import com.strategicgains.hyperexpress.domain.Link;
-import com.strategicgains.hyperexpress.domain.LinkableCollection;
-import com.strategicgains.hyperexpress.util.LinkUtils;
-import com.strategicgains.restexpress.Request;
-import com.strategicgains.restexpress.Response;
-import com.strategicgains.restexpress.common.query.QueryFilter;
-import com.strategicgains.restexpress.common.query.QueryOrder;
-import com.strategicgains.restexpress.common.query.QueryRange;
-import com.strategicgains.restexpress.exception.BadRequestException;
-import com.strategicgains.restexpress.query.QueryFilters;
-import com.strategicgains.restexpress.query.QueryOrders;
-import com.strategicgains.restexpress.query.QueryRanges;
 import com.strategicgains.syntaxe.ValidationEngine;
 
 public class CommentController
@@ -32,11 +30,11 @@ public class CommentController
 		this.comments = commentRepository;
 	}
 
-	public String create(Request request, Response response)
+	public Comment create(Request request, Response response)
 	{
 		Comment comment = request.getBodyAs(Comment.class, "Comment details not provided");
-		String blogId = request.getUrlDecodedHeader(Constants.BLOG_ID_PARAMETER, "Blog ID not provided");
-		String blogEntryId = request.getUrlDecodedHeader(Constants.BLOG_ENTRY_ID_PARAMETER, "Blog Entry ID not provided");
+		String blogId = request.getHeader(Constants.BLOG_ID_PARAMETER, "Blog ID not provided");
+		String blogEntryId = request.getHeader(Constants.BLOG_ENTRY_ID_PARAMETER, "Blog Entry ID not provided");
 		comment.setBlogEntryId(blogEntryId);
 		ValidationEngine.validateAndThrow(comment);
 		Comment saved = comments.create(comment);
@@ -51,14 +49,14 @@ public class CommentController
 				Constants.BLOG_ID_PARAMETER, blogId,
 				Constants.BLOG_ENTRY_ID_PARAMETER, blogEntryId));
 
-		// Return the newly-created ID...
-		return saved.getId();
+		// Return the newly-created item...
+		return saved;
 	}
 
 	public Comment read(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.COMMENT_ID_PARAMETER, "No Comment ID supplied");
-		String blogId = request.getUrlDecodedHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID supplied");
+		String id = request.getHeader(Constants.COMMENT_ID_PARAMETER, "No Comment ID supplied");
+		String blogId = request.getHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID supplied");
 		Comment result = comments.read(id);
 
 		// Add 'self' link
@@ -78,10 +76,10 @@ public class CommentController
 		return result;
 	}
 
-	public LinkableCollection<Comment> readAll(Request request, Response response)
+	public List<Comment> readAll(Request request, Response response)
 	{
-		String blogId = request.getUrlDecodedHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID supplied");
-		String blogEntryId = request.getUrlDecodedHeader(Constants.BLOG_ENTRY_ID_PARAMETER, "No Blog Entry ID supplied");
+		String blogId = request.getHeader(Constants.BLOG_ID_PARAMETER, "No Blog ID supplied");
+		String blogEntryId = request.getHeader(Constants.BLOG_ENTRY_ID_PARAMETER, "No Blog Entry ID supplied");
 		QueryFilter filter = QueryFilters.parseFrom(request);
 		QueryOrder order = QueryOrders.parseFrom(request);
 		QueryRange range = QueryRanges.parseFrom(request, 20);
@@ -114,7 +112,7 @@ public class CommentController
 
 	public void update(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.COMMENT_ID_PARAMETER);
+		String id = request.getHeader(Constants.COMMENT_ID_PARAMETER);
 		Comment comment = request.getBodyAs(Comment.class, "Comment details not provided");
 		
 		if (!id.equals(comment.getId()))
@@ -129,7 +127,7 @@ public class CommentController
 
 	public void delete(Request request, Response response)
 	{
-		String id = request.getUrlDecodedHeader(Constants.COMMENT_ID_PARAMETER, "No Comment ID supplied");
+		String id = request.getHeader(Constants.COMMENT_ID_PARAMETER, "No Comment ID supplied");
 		comments.delete(id);
 		response.setResponseNoContent();
 	}

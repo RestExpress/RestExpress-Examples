@@ -1,10 +1,9 @@
 package com.benchmark;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
-
-import com.strategicgains.restexpress.Request;
-import com.strategicgains.restexpress.Response;
-import com.strategicgains.restexpress.RestExpress;
+import org.restexpress.Request;
+import org.restexpress.Response;
+import org.restexpress.RestExpress;
 
 public class Main
 {
@@ -15,9 +14,10 @@ public class Main
 
         server.uri("/echo", new Object()
         {
+            @SuppressWarnings("unused")
             public String read(Request req, Response res)
             {
-                String value = req.getRawHeader("echo");
+                String value = req.getHeader("echo");
                 res.setContentType("text/xml");
 
                 if (value == null)

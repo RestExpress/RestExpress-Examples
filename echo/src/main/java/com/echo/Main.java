@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.restexpress.RestExpress;
-import org.restexpress.pipeline.SimpleConsoleLogMessageObserver;
 import org.restexpress.util.Environment;
 
 import com.echo.serialization.SerializationProvider;
@@ -23,11 +22,14 @@ public class Main
 		Configuration config = loadEnvironment(args);
 		RestExpress server = new RestExpress()
 		    .setName(config.getName())
-		    .setPort(config.getPort())
-   		    .addMessageObserver(new SimpleConsoleLogMessageObserver());
-
+		    .setPort(config.getPort());
 
 		defineRoutes(server, config);
+
+		if (config.getWorkerCount() > 0)
+		{
+			server.setIoThreadCount(config.getWorkerCount());
+		}
 
 		if (config.getExecutorThreadCount() > 0)
 	    {
@@ -45,7 +47,7 @@ public class Main
      */
     private static void defineRoutes(RestExpress server, Configuration config)
     {
-		// This route supports POST and PUT, echoing the body in the response.
+		// This route supports GET, POST, PUT, DELETE echoing the 'echo' query-string parameter in the response.
     	// GET and DELETE are also supported but require an 'echo' header or query-string parameter.
 		server.uri("/echo/{delay_ms}", config.getEchoController())
 			.noSerialization();
