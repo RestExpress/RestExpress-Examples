@@ -1,6 +1,6 @@
 package com.echo.controller;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 import org.restexpress.Request;
 import org.restexpress.Response;
 
@@ -14,7 +14,7 @@ extends AbstractDelayingController
     private static final String ECHO_PARAMETER_NOT_FOUND = "'echo' header or query-string parameter not found";
 	private static final String ECHO_HEADER = "echo";
 
-	public ChannelBuffer create(Request request, Response response)
+	public ByteBuf create(Request request, Response response)
 	{
 		delay(request);
 		response.setResponseCreated();
@@ -40,7 +40,7 @@ extends AbstractDelayingController
 		return echo;
 	}
 
-	public ChannelBuffer update(Request request, Response response)
+	public ByteBuf update(Request request, Response response)
 	{
 		delay(request);
 		return request.getBody();
