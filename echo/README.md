@@ -8,10 +8,14 @@ The service suite supports the following functionality.
 Echo
 ====
 
-This URL simply sends back the same string that is sent in on the 'echo' query-string parameter. There is no serialization involved in the response. The body is not parsed.
-
 URL: /echo/{delay_ms}
 Methods: GET, PUT, POST, DELETE
+
+GET, DELETE: send back the same string that is sent in on the 'echo' query-string parameter.
+
+PUT, POST: send back the body contents.
+
+There is no serialization involved in the response. The body is not parsed.
 
 Success
 =======
