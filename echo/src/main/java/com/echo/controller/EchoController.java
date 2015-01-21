@@ -1,6 +1,6 @@
 package com.echo.controller;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 import org.restexpress.Request;
 import org.restexpress.Response;
 
@@ -14,11 +14,16 @@ extends AbstractDelayingController
     private static final String ECHO_PARAMETER_NOT_FOUND = "'echo' header or query-string parameter not found";
 	private static final String ECHO_HEADER = "echo";
 
-	public ChannelBuffer create(Request request, Response response)
+	public ByteBuf create(Request request, Response response)
 	{
 		delay(request);
 		response.setResponseCreated();
-		return request.getBody();
+
+        // copy the body for the result
+        // do NOT return the ByteBuf directly because is a shared buffer
+        // Netty will release the buffer twice (once for the request and once for the response)
+        // which will result in an IllegalReferenceCountException
+        return request.getBody().copy();
 	}
 	
 	public String delete(Request request, Response response)
@@ -40,9 +45,14 @@ extends AbstractDelayingController
 		return echo;
 	}
 
-	public ChannelBuffer update(Request request, Response response)
+	public ByteBuf update(Request request, Response response)
 	{
 		delay(request);
-		return request.getBody();
+
+        // copy the body for the result
+        // do NOT return the ByteBuf directly because is a shared buffer
+        // Netty will release the buffer twice (once for the request and once for the response)
+        // which will result in an IllegalReferenceCountException
+        return request.getBody().copy();
 	}
 }
