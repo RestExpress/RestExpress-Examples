@@ -2,7 +2,7 @@ package com.example;
 
 import java.io.IOException;
 
-import org.jboss.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpMethod;
 import org.restexpress.RestExpress;
 
 public class Main
