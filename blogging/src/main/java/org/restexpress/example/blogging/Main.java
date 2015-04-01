@@ -15,6 +15,7 @@ import org.restexpress.RestExpress;
 import org.restexpress.example.blogging.event.BlogCascadeDeleteHandler;
 import org.restexpress.example.blogging.event.BlogEntryCascadeDeleteHandler;
 import org.restexpress.example.blogging.postprocessor.LastModifiedHeaderPostprocessor;
+import org.restexpress.example.blogging.serialization.SerializationProvider;
 import org.restexpress.exception.BadRequestException;
 import org.restexpress.exception.ConflictException;
 import org.restexpress.exception.NotFoundException;
@@ -49,6 +50,8 @@ public class Main
 
 	public static void main(String[] args) throws Exception
 	{
+		RestExpress.setSerializationProvider(new SerializationProvider());
+
 		Configuration config = Environment.load(args, Configuration.class);
 		RestExpress server = new RestExpress()
 		    .setName(SERVICE_NAME)

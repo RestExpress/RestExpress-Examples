@@ -1,8 +1,8 @@
 package org.restexpress.example.blogging.serialization;
 
 import org.restexpress.response.ErrorResponseWrapper;
-import org.restexpress.response.ResponseProcessor;
 import org.restexpress.response.ResponseWrapper;
+import org.restexpress.serialization.AbstractSerializationProvider;
 import org.restexpress.serialization.SerializationProcessor;
 
 /**
@@ -11,24 +11,32 @@ import org.restexpress.serialization.SerializationProcessor;
  * @author toddf
  * @since May 15, 2012
  */
-public class ResponseProcessors
+public class SerializationProvider
+extends AbstractSerializationProvider
 {
 	// SECTION: CONSTANTS
 
 	private static final SerializationProcessor JSON_SERIALIZER = new JsonSerializationProcessor();
 	private static final SerializationProcessor XML_SERIALIZER = new XmlSerializationProcessor();
-	private static final ResponseWrapper RAW_WRAPPER = new ErrorResponseWrapper();
+	private static final ResponseWrapper RESPONSE_WRAPPER = new ErrorResponseWrapper();
+
+	public SerializationProvider()
+    {
+	    super();
+	    add(JSON_SERIALIZER, RESPONSE_WRAPPER, true);
+	    add(XML_SERIALIZER, RESPONSE_WRAPPER);
+    }
 
 
 	// SECTION: FACTORY
 
-	public static ResponseProcessor json()
+	public static SerializationProcessor json()
 	{
-		return new ResponseProcessor(JSON_SERIALIZER, RAW_WRAPPER);
+		return JSON_SERIALIZER;
 	}
 
-	public static ResponseProcessor xml()
+	public static SerializationProcessor xml()
 	{
-		return new ResponseProcessor(XML_SERIALIZER, RAW_WRAPPER);
+		return XML_SERIALIZER;
 	}
 }

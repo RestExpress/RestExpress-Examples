@@ -10,7 +10,8 @@ public abstract class Routes
 	{
 		server.uri("/blogs.{format}", config.getBlogController())
 			.action("readAll", HttpMethod.GET)
-			.method(HttpMethod.POST);
+			.method(HttpMethod.POST)
+			.name(Constants.Routes.BLOGS_READ_ROUTE);
 	
 		server.uri("/blogs/{blogId}.{format}", config.getBlogController())
 			.method(HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE)

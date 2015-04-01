@@ -3,12 +3,17 @@ package org.restexpress.example.blogging.domain;
 import java.util.UUID;
 
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Indexes;
 
 import com.strategicgains.syntaxe.annotation.Required;
 import com.strategicgains.syntaxe.annotation.StringValidation;
 
 @Entity("comments")
+@Indexes({
+	@Index("createdAt")
+})
 public class Comment
 extends AbstractEntity
 {

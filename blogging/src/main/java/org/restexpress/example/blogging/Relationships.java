@@ -17,10 +17,15 @@ public abstract class Relationships
 		Map<String, String> routes = server.getRouteUrlsByName();
 
 		HyperExpress.relationships()
+		.forCollectionOf(Blog.class)
+			.rel(RelTypes.SELF, routes.get(Constants.Routes.BLOGS_READ_ROUTE))
+
 		.forClass(Blog.class)
 			.rel(RelTypes.SELF, routes.get(Constants.Routes.BLOG_READ_ROUTE))
+			.rel("entries", routes.get(Constants.Routes.BLOG_ENTRIES_READ_ROUTE))
 
 		.forCollectionOf(BlogEntry.class)
+			.asRel("entries")
 			.rel(RelTypes.SELF, routes.get(Constants.Routes.BLOG_ENTRIES_READ_ROUTE))
 				.withQuery("filter={filter}")
 				.withQuery("limit={limit}")
@@ -38,6 +43,7 @@ public abstract class Relationships
 		.forClass(BlogEntry.class)
 			.rel(RelTypes.SELF, routes.get(Constants.Routes.BLOG_ENTRY_READ_ROUTE))
 			.rel(RelTypes.UP, routes.get(Constants.Routes.BLOG_ENTRIES_READ_ROUTE))
+			.rel("comments", routes.get(Constants.Routes.COMMENTS_READ_ROUTE))
 
 		.forCollectionOf(Comment.class)
 			.rel(RelTypes.SELF, routes.get(Constants.Routes.COMMENTS_READ_ROUTE))
