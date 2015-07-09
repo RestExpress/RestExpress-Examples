@@ -105,7 +105,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
-					<mainClass>org.restexpress.examples.blogging.Main</mainClass>
+					<mainClass>org.restexpress.example.blogging.Main</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -118,7 +118,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>./lib/</classpathPrefix>
-							<mainClass>org.restexpress.examples.blogging.Main</mainClass>
+							<mainClass>org.restexpress.example.blogging.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
