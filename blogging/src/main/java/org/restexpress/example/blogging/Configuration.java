@@ -21,7 +21,7 @@ extends Environment
 
 	private static final String PORT_PROPERTY = "port";
 	private static final String BASE_URL_PROPERTY = "base.url";
-	private static final String EXECUTOR_THREAD_POOL_SIZE = "executor.threadPool.size";
+	private static final String EXECUTOR_THREAD_POOL_SIZE = "thread.pool.size";
 
 	private int port;
 	private String baseUrl;
