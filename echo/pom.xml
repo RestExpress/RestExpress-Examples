@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.strategicgains</groupId>
 			<artifactId>RestExpress</artifactId>
-			<version>0.10.5</version>
+			<version>0.11.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -41,7 +41,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
-					<mainClass>com.echo.Main</mainClass>
+					<mainClass>org.restexpress.example.echo.Main</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -54,7 +54,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>./lib/</classpathPrefix>
-							<mainClass>com.echo.Main</mainClass>
+							<mainClass>org.restexpress.example.echo.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -1,8 +1,5 @@
 package org.restexpress.example.echo;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.restexpress.RestExpress;
 import org.restexpress.example.echo.serialization.SerializationProvider;
 import org.restexpress.util.Environment;
@@ -18,7 +15,7 @@ public class Main
 	public static void main(String[] args) throws Exception
 	{
 		RestExpress.setSerializationProvider(new SerializationProvider());
-		Configuration config = loadEnvironment(args);
+		Configuration config = Environment.load(args, Configuration.class);
 		RestExpress server = new RestExpress()
 		    .setName(config.getName())
 		    .setPort(config.getPort());
@@ -70,16 +67,5 @@ public class Main
 //    	.mapException(ItemNotFoundException.class, NotFoundException.class)
 //    	.mapException(DuplicateItemException.class, ConflictException.class)
 //    	.mapException(ValidationException.class, BadRequestException.class);
-    }
-
-	private static Configuration loadEnvironment(String[] args)
-    throws FileNotFoundException, IOException
-    {
-	    if (args.length > 0)
-		{
-			return Environment.from(args[0], Configuration.class);
-		}
-
-	    return Environment.fromDefault(Configuration.class);
     }
 }
