@@ -4,16 +4,24 @@ import java.util.UUID;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Indexed;
+import org.restexpress.example.blogging.Constants;
+import org.restexpress.example.blogging.serialization.UuidFormatter;
 
+import com.strategicgains.hyperexpress.annotation.BindToken;
+import com.strategicgains.hyperexpress.annotation.TokenBindings;
 import com.strategicgains.syntaxe.annotation.Required;
 import com.strategicgains.syntaxe.annotation.StringValidation;
 
 @Entity("blog_entries")
+@TokenBindings({
+	@BindToken(value=Constants.Url.BLOG_ENTRY_ID_PARAMETER, field="id", formatter=UuidFormatter.class)
+})
 public class BlogEntry
 extends AbstractEntity
 {
 	@Indexed
 	@Required("Blog ID")
+	@BindToken(value=Constants.Url.BLOG_ID_PARAMETER, formatter=UuidFormatter.class)
 	private UUID blogId;
 
 	@StringValidation(name="Title", required=true)

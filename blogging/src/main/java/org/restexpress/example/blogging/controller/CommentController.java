@@ -1,7 +1,6 @@
 package org.restexpress.example.blogging.controller;
 
 import static com.strategicgains.repoexpress.adapter.Identifiers.UUID;
-import io.netty.handler.codec.http.HttpMethod;
 
 import java.util.List;
 
@@ -23,15 +22,18 @@ import org.restexpress.query.QueryOrders;
 import org.restexpress.query.QueryRanges;
 
 import com.strategicgains.hyperexpress.HyperExpress;
+import com.strategicgains.hyperexpress.builder.DefaultUrlBuilder;
 import com.strategicgains.hyperexpress.builder.TokenBinder;
 import com.strategicgains.hyperexpress.builder.TokenResolver;
 import com.strategicgains.hyperexpress.builder.UrlBuilder;
 import com.strategicgains.repoexpress.util.UuidConverter;
 import com.strategicgains.syntaxe.ValidationEngine;
 
+import io.netty.handler.codec.http.HttpMethod;
+
 public class CommentController
 {
-	private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
+	private static final UrlBuilder LOCATION_BUILDER = new DefaultUrlBuilder();
 	private CommentRepository comments;
 	private BlogEntryRepository entries;
 	private BlogRepository blogs;
@@ -59,9 +61,7 @@ public class CommentController
 		response.setResponseCreated();
 
 		// Bind the resource with link URL tokens, etc. here...
-		TokenResolver resolver = HyperExpress.bind(Constants.Url.COMMENT_ID_PARAMETER, UUID.format(saved.getUuid()))
-			.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(blog.getUuid()))
-			.bind(Constants.Url.BLOG_ENTRY_ID_PARAMETER, UUID.format(saved.getBlogEntryId()));
+		TokenResolver resolver = HyperExpress.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(blog.getUuid()));
 
 		// Include the Location header...
 		String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.COMMENT_READ_ROUTE);
@@ -81,9 +81,7 @@ public class CommentController
 		Comment entity = comments.read(UUID.parse(id));
 
 		// Bind the resource with link URL tokens, etc. here...
-		HyperExpress.bind(Constants.Url.COMMENT_ID_PARAMETER, UUID.format(entity.getUuid()))
-			.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(blog.getUuid()))
-			.bind(Constants.Url.BLOG_ENTRY_ID_PARAMETER, UUID.format(entity.getBlogEntryId()));
+		HyperExpress.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(blog.getUuid()));
 
 		return entity;
 	}
@@ -109,9 +107,7 @@ public class CommentController
 			@Override
 			public void bind(Comment entity, TokenResolver resolver)
 			{
-				resolver.bind(Constants.Url.COMMENT_ID_PARAMETER, UUID.format(entity.getUuid()))
-					.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(blog.getUuid()))
-					.bind(Constants.Url.BLOG_ENTRY_ID_PARAMETER, UUID.format(entity.getBlogEntryId()));
+				resolver.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(blog.getUuid()));
 			}
 		});
 

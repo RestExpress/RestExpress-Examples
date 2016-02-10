@@ -30,52 +30,52 @@
 		<dependency>
 			<groupId>com.strategicgains</groupId>
 			<artifactId>RestExpress</artifactId>
-			<version>0.11.0</version>
+			<version>0.11.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains</groupId>
 			<artifactId>HyperExpressPlugin</artifactId>
-			<version>2.3</version>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains.plugin-express</groupId>
 			<artifactId>CacheControlPlugin</artifactId>
-			<version>0.3.0</version>
+			<version>0.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains.plugin-express</groupId>
 			<artifactId>SwaggerPlugin</artifactId>
-			<version>0.3.0</version>
+			<version>0.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains.plugin-express</groupId>
 			<artifactId>MetricsPlugin</artifactId>
-			<version>0.3.0</version>
+			<version>0.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains.plugin-express</groupId>
 			<artifactId>CORSPlugin</artifactId>
-			<version>0.3.0</version>
+			<version>0.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains</groupId>
 			<artifactId>Syntaxe</artifactId>
-			<version>0.4.9</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains.repoexpress</groupId>
 			<artifactId>repoexpress-mongodb</artifactId>
-			<version>0.4.5</version>
+			<version>0.4.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains.domain-eventing</groupId>
 			<artifactId>domain-eventing-core</artifactId>
-			<version>0.4.5</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.dropwizard.metrics</groupId>
 			<artifactId>metrics-graphite</artifactId>
-			<version>3.1.0</version>
+			<version>3.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

@@ -1,7 +1,6 @@
 package org.restexpress.example.blogging.controller;
 
 import static com.strategicgains.repoexpress.adapter.Identifiers.UUID;
-import io.netty.handler.codec.http.HttpMethod;
 
 import java.util.List;
 
@@ -20,16 +19,17 @@ import org.restexpress.query.QueryFilters;
 import org.restexpress.query.QueryOrders;
 import org.restexpress.query.QueryRanges;
 
-import com.strategicgains.hyperexpress.HyperExpress;
-import com.strategicgains.hyperexpress.builder.TokenBinder;
-import com.strategicgains.hyperexpress.builder.TokenResolver;
+import com.strategicgains.hyperexpress.builder.DefaultTokenResolver;
+import com.strategicgains.hyperexpress.builder.DefaultUrlBuilder;
 import com.strategicgains.hyperexpress.builder.UrlBuilder;
 import com.strategicgains.repoexpress.util.UuidConverter;
 import com.strategicgains.syntaxe.ValidationEngine;
 
+import io.netty.handler.codec.http.HttpMethod;
+
 public class BlogEntryController
 {
-	private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
+	private static final UrlBuilder LOCATION_BUILDER = new DefaultUrlBuilder();
 	private BlogEntryRepository blogEntries;
 	private BlogRepository blogs;
 	
@@ -52,13 +52,9 @@ public class BlogEntryController
 		// Construct the response for create...
 		response.setResponseCreated();
 
-		// Bind the resource with link URL tokens, etc. here...
-		TokenResolver resolver = HyperExpress.bind(Constants.Url.BLOG_ENTRY_ID_PARAMETER, UUID.format(saved.getUuid()))
-			.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(saved.getBlogId()));
-
 		// Include the Location header...
 		String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.BLOG_ENTRY_READ_ROUTE);
-		response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, resolver));
+		response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, new DefaultTokenResolver()));
 
 		// Return the newly-created item...
 		return saved;
@@ -68,11 +64,6 @@ public class BlogEntryController
 	{
 		String id = request.getHeader(Constants.Url.BLOG_ENTRY_ID_PARAMETER, "No BlogEntry ID supplied");
 		BlogEntry entity = blogEntries.read(UUID.parse(id));
-
-		// enrich the resource with links, etc. here...
-		HyperExpress.bind(Constants.Url.BLOG_ENTRY_ID_PARAMETER, UUID.format(entity.getUuid()))
-			.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(entity.getBlogId()));
-
 		return entity;
 	}
 
@@ -86,17 +77,6 @@ public class BlogEntryController
 		filter.addCriteria("blogId", FilterOperator.EQUALS, UuidConverter.parse(blogId));
 		List<BlogEntry> results = blogEntries.readAll(filter, range, order);
 		response.setCollectionResponse(range, results.size(), blogEntries.count(filter));
-
-		// Bind the resources in the collection with link URL tokens, etc. here...
-		HyperExpress.tokenBinder(new TokenBinder<BlogEntry>()
-		{
-			@Override
-			public void bind(BlogEntry entity, TokenResolver resolver)
-			{
-				resolver.bind(Constants.Url.BLOG_ENTRY_ID_PARAMETER, UUID.format(entity.getUuid()))
-				.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(entity.getBlogId()));
-			}
-		});
 
 		return results;
 	}

@@ -1,7 +1,6 @@
 package org.restexpress.example.blogging.controller;
 
 import static com.strategicgains.repoexpress.adapter.Identifiers.UUID;
-import io.netty.handler.codec.http.HttpMethod;
 
 import java.util.List;
 
@@ -17,15 +16,16 @@ import org.restexpress.query.QueryFilters;
 import org.restexpress.query.QueryOrders;
 import org.restexpress.query.QueryRanges;
 
-import com.strategicgains.hyperexpress.HyperExpress;
-import com.strategicgains.hyperexpress.builder.TokenBinder;
-import com.strategicgains.hyperexpress.builder.TokenResolver;
+import com.strategicgains.hyperexpress.builder.DefaultTokenResolver;
+import com.strategicgains.hyperexpress.builder.DefaultUrlBuilder;
 import com.strategicgains.hyperexpress.builder.UrlBuilder;
 import com.strategicgains.syntaxe.ValidationEngine;
 
+import io.netty.handler.codec.http.HttpMethod;
+
 public class BlogController
 {
-	private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
+	private static final UrlBuilder LOCATION_BUILDER = new DefaultUrlBuilder();
 	private BlogRepository blogs;
 	
 	public BlogController(BlogRepository blogRepository)
@@ -43,12 +43,9 @@ public class BlogController
 		// Construct the response for create...
 		response.setResponseCreated();
 
-		// Bind the resource with link URL tokens, etc. here...
-		TokenResolver resolver = HyperExpress.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(saved.getUuid()));
-
 		// Include the Location header...
 		String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.BLOG_ENTRY_READ_ROUTE);
-		response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, resolver));
+		response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, new DefaultTokenResolver()));
 
 		// Return the newly-created item...
 		return saved;
@@ -58,9 +55,6 @@ public class BlogController
 	{
 		String id = request.getHeader(Constants.Url.BLOG_ID_PARAMETER, "No Blog ID supplied");
 		Blog entity = blogs.read(UUID.parse(id));
-
-		// enrich the resource with links, etc. here...
-		HyperExpress.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(entity.getUuid()));
 
 		return entity;
 	}
@@ -72,16 +66,6 @@ public class BlogController
 		QueryRange range = QueryRanges.parseFrom(request, 20);
 		List<Blog> entities = blogs.readAll(filter, range, order);
 		response.setCollectionResponse(range, entities.size(), blogs.count(filter));
-
-		// Bind the resources in the collection with link URL tokens, etc. here...
-		HyperExpress.tokenBinder(new TokenBinder<Blog>()
-		{
-			@Override
-			public void bind(Blog entity, TokenResolver resolver)
-			{
-				resolver.bind(Constants.Url.BLOG_ID_PARAMETER, UUID.format(entity.getUuid()));
-			}
-		});
 
 		return entities;
 	}
